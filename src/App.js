@@ -1,6 +1,8 @@
 import React, {Component} from 'react';//Added {Component}
 import logo from './logo.svg';
 import './App.css';
+import {ToDoBanner} from './ToDoBanner'
+import {ToDoRow} from './ToDoRow'
 
 /*
 function App() {
@@ -47,7 +49,22 @@ export default class App extends Component {
         {action: "Apply For Jobs", done: false}
       ]
     }
+
+    //below is end of constructor
   }
+      //Create a new method inside of the app component
+      todoTableRows = (isDone) => this.state.todoItems.filter(todoItem => todoItem.done === isDone).map(itemx => <ToDoRow
+        key = {itemx.action}
+        item = {itemx}
+        callback = {this.toggleToDo}
+      />)
+
+      // Invoked as a callback when the ToDoRow coponent has a change event to the "done" property .setState allos the data to be updated
+      toggleToDo = (todo) => this.setState(
+        {todoItems: this.state.todoItems.map(
+          item => item.action === todo.action ? {...item, done: !item.done} : item
+        )}
+      );
   render = () =>
   //When using the fat arrow syntax the return keyword is not needed and curly braces around the body of the function is also not needed
     <div>
@@ -60,12 +77,19 @@ export default class App extends Component {
       displayName = {this.state.userName}
       tasks = {this.state.todoItems}
       />
+
+      <table className="table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th>Description</th>
+            <th>Done</th>
+          </tr>
+        </thead>
+        <tbody>
+          {this.todoTableRows(false)}
+        </tbody>
+      </table>
     </div>
 
 };
-export class ToDoBanner extends Component{
-  render = () =>
-  <h4 className = "bq-primary text-white text-center p-2">
-    {this.props.displayName}'s To Do List ({this.props.tasks.filter(task => !task.done).length} items to do)
-  </h4>
-};
+
